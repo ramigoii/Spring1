@@ -31,8 +31,11 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     public void update(Long id, ProgramDto programDto) {
-        Program program = programMapper.toEntity(programDto);
-        program.setId(id);
+        Program program = programRepository.findById(id).orElseThrow();
+        Program programEnt = programMapper.toEntity(programDto);
+        program.setId(programEnt.getId());
+        program.setName(programEnt.getName());
+        program.setDescription(programEnt.getDescription());
         programRepository.save(program);
     }
 

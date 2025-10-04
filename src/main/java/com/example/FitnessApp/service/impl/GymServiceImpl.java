@@ -6,11 +6,12 @@ import com.example.FitnessApp.model.Gym;
 import com.example.FitnessApp.repository.GymRepository;
 import com.example.FitnessApp.service.GymService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GymServiceImpl implements GymService {
     private final GymRepository gymRepository;
     private final GymMapper gymMapper;
@@ -31,8 +32,11 @@ public class GymServiceImpl implements GymService {
 
     @Override
     public void updateGym(Long id, GymDto gymDto) {
-        Gym gym = gymMapper.toEntity(gymDto);
-        gym.setId(id);
+        Gym gym = gymRepository.findById(id).orElseThrow();
+        Gym gymEnt = gymMapper.toEntity(gymDto);
+        gym.setId(gymEnt.getId());
+        gym.setName(gymEnt.getName());
+        gym.setCity(gymEnt.getCity());
         gymRepository.save(gym);
 
     }

@@ -6,11 +6,12 @@ import com.example.FitnessApp.model.Category;
 import com.example.FitnessApp.repository.CategoryRepository;
 import com.example.FitnessApp.service.CategoryService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
@@ -33,10 +34,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void updateCategory(Long id, CategoryDto categoryDto) {
-        Category category = categoryMapper.toEntity(categoryDto);
-        category.setId(id);
+        Category category = categoryRepository.findById(id).orElseThrow();
+        Category categoryEntity = categoryMapper.toEntity(categoryDto);
+        category.setId(categoryEntity.getId());
+        category.setName(categoryEntity.getName());
         categoryRepository.save(category);
-
     }
 
     @Override
