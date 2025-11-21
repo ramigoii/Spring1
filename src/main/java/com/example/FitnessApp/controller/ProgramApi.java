@@ -1,11 +1,9 @@
 package com.example.FitnessApp.controller;
 
 import com.example.FitnessApp.dto.ProgramDto;
-import com.example.FitnessApp.model.Program;
 import com.example.FitnessApp.service.ProgramService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

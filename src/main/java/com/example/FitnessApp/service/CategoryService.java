@@ -1,14 +1,11 @@
 package com.example.FitnessApp.service;
-
 import com.example.FitnessApp.dto.CategoryDto;
-import com.example.FitnessApp.model.Category;
-
 import java.util.List;
 
 public interface CategoryService {
     List<CategoryDto> getAll();
     CategoryDto getById(Long id);
-    void addCategory(CategoryDto categoryDto);
-    void updateCategory(Long id, CategoryDto categoryDto);
-    void deleteCategory(Long id);
+    CategoryDto addCategory(CategoryDto categoryDto);
+    CategoryDto updateCategory(Long id, CategoryDto categoryDto);
+    Boolean deleteCategory(Long id);
 }

@@ -8,6 +8,7 @@ import com.example.FitnessApp.service.ProgramService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,27 +22,35 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     public ProgramDto getById(Long id) {
-         return programMapper.toDto(programRepository.findById(id).orElseThrow());
+         return programMapper.toDto(programRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void addProgram(ProgramDto programDto) {
-        programRepository.save(programMapper.toEntity(programDto));
+    public ProgramDto addProgram(ProgramDto programDto) {
+        Program program = programMapper.toEntity(programDto);
+        Program saved = programRepository.save(program);
+
+        return programMapper.toDto(saved);
     }
 
     @Override
-    public void update(Long id, ProgramDto programDto) {
-        Program program = programRepository.findById(id).orElseThrow();
-        Program programEnt = programMapper.toEntity(programDto);
-        program.setId(programEnt.getId());
-        program.setName(programEnt.getName());
-        program.setDescription(programEnt.getDescription());
-        programRepository.save(program);
+    public ProgramDto update(Long id, ProgramDto programDto) {
+        Program program = programRepository.findById(id).orElse(null);
+        Program update = programMapper.toEntity(programDto);
+
+        program.setName(update.getName());
+        program.setDescription(update.getDescription());
+
+        return programMapper.toDto(programRepository.save(program));
     }
 
     @Override
-    public void deleteProgram(Long id) {
+    public Boolean deleteProgram(Long id) {
         programRepository.deleteById(id);
-
+        Program program = programRepository.findById(id).orElse(null);
+        if(Objects.isNull(program)){
+            return true;
+        }
+        return false;
     }
 }

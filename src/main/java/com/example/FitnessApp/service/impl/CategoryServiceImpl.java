@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -23,26 +25,32 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getById(Long id) {
-        return categoryMapper.toDto(categoryRepository.findById(id).orElseThrow());
+        return categoryMapper.toDto(categoryRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void addCategory(CategoryDto categoryDto) {
-        categoryRepository.save(categoryMapper.toEntity(categoryDto));
+    public CategoryDto addCategory(CategoryDto categoryDto) {
+        Category cat = categoryRepository.save(categoryMapper.toEntity(categoryDto));
+        return categoryMapper.toDto(cat);
 
     }
 
     @Override
-    public void updateCategory(Long id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(id).orElseThrow();
         Category categoryEntity = categoryMapper.toEntity(categoryDto);
         category.setId(categoryEntity.getId());
         category.setName(categoryEntity.getName());
-        categoryRepository.save(category);
+        return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
-    public void deleteCategory(Long id) {
+    public Boolean deleteCategory(Long id) {
         categoryRepository.deleteById(id);
+        Category cat = categoryRepository.findById(id).orElse(null);
+        if(Objects.isNull(cat)){
+            return true;
+        }
+        return false;
     }
 }

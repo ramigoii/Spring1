@@ -17,17 +17,24 @@ import java.util.List;
 public class Program {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "program_id")
+    @Column(name = "t_id")
     private Long id;
 
+    @Column(name = "t_name")
     private String name;
+    @Column(name = "t_description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "program_gym",
+            joinColumns = @JoinColumn(name = "program_id"),
+            inverseJoinColumns = @JoinColumn(name = "gym_id")
+    )
     private List<Gym> gyms;
 
 }

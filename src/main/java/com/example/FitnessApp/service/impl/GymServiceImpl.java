@@ -5,11 +5,13 @@ import com.example.FitnessApp.mapper.GymMapper;
 import com.example.FitnessApp.model.Gym;
 import com.example.FitnessApp.repository.GymRepository;
 import com.example.FitnessApp.service.GymService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+
+
 @Service
 @RequiredArgsConstructor
 public class GymServiceImpl implements GymService {
@@ -22,27 +24,34 @@ public class GymServiceImpl implements GymService {
 
     @Override
     public GymDto getById(Long id) {
-        return gymMapper.toDto(gymRepository.findById(id).orElseThrow());
+        return gymMapper.toDto(gymRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void addGym(GymDto gymDto) {
-        gymRepository.save(gymMapper.toEntity(gymDto));
+    public GymDto addGym(GymDto gymDto) {
+        Gym gym = gymRepository.save(gymMapper.toEntity(gymDto));
+        return gymMapper.toDto(gym);
     }
 
     @Override
-    public void updateGym(Long id, GymDto gymDto) {
-        Gym gym = gymRepository.findById(id).orElseThrow();
+    public GymDto updateGym(Long id, GymDto gymDto) {
+        Gym gym = gymRepository.findById(id).orElse(null);
         Gym gymEnt = gymMapper.toEntity(gymDto);
+
         gym.setId(gymEnt.getId());
         gym.setName(gymEnt.getName());
         gym.setCity(gymEnt.getCity());
-        gymRepository.save(gym);
+        return gymMapper.toDto(gymRepository.save(gym));
 
     }
 
     @Override
-    public void deleteGym(Long id) {
+    public Boolean deleteGym(Long id) {
         gymRepository.deleteById(id);
+        Gym gym = gymRepository.findById(id).orElse(null);
+        if(Objects.isNull(gym)){
+            return true;
+        }
+        return false;
     }
 }
