@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  backend-service:
+    image: 'fitnessapp-iso'
+    container_name: 'fitness-backend-container'
+    depends_on:
+      - database-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database-service:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+    ports:
+      - 4444:8008
+
+  database-service:
+    image: 'postgres'
+    container_name: 'fitness-database-container'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 2345:5432
